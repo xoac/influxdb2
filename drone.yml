@@ -1,0 +1,24 @@
+kind: pipeline
+type: docker
+name: default
+environment:
+  - INFLUX_ORG=primary_org
+  - INFLUX_HOST=http://influxdb2:9999
+  - INFLUX_BUCKET=primary_bucket
+
+steps:
+- name: influxdb2
+  image: quay.io/influxdb/influxdb:2.0.0-beta
+  detach: true  # Treat it as service
+  environment:
+    - INFLUX_USER=user
+  commands:
+  - sleep 5
+  - influx setup -f -b $INFLUX_BUCKET -u $INFLUX_USER -p password -o $INFLUX_ORG
+  - echo INFLUX_TOKEN=$(influx auth list | awk 'NR==2{print $2}') > $DRONE_STEP_NAME.env
+
+- name: test
+  image: rust:1
+  commands:
+  - cargo test --verbose --all
+
