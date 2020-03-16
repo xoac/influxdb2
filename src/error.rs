@@ -34,5 +34,3 @@ pub struct ApiError {
     code: ErrorCode,
     message: String,
 }
-
-enum Error {}

@@ -1,11 +1,7 @@
-use crate::error::ApiError;
-use http::{method::Method, request::Builder as ReqBuilder, uri::Uri};
+use http::{method::Method, uri::Uri};
 use influxdb_line_protocol::Batch;
 use reqwest as rw;
 use reqwest::Client as ReqwestClient;
-use serde_json::Value;
-
-struct ConnectError {}
 
 /// Influx DB v2 Client
 #[derive(Debug, Clone)]

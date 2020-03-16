@@ -1,19 +1,18 @@
 use influxdb2::write::WriteQuery;
 use influxdb2::Client;
-use influxdb_line_protocol::{error::Error, Field, IntoPoint, Point};
+use influxdb_line_protocol::{error::Error, Field, Point};
 use std::convert::TryFrom;
 
 struct Meas {
-    timestamp: Option<bool>,
-    u: i64,
-    i: f64,
+    u: u64,
+    i: i64,
     fi: f64,
     //tags
     location: String,
 }
 
-impl IntoPoint for Meas {
-    fn into_point(self) -> Point {
+impl Into<Point> for Meas {
+    fn into(self) -> Point {
         let fields = vec![
             Field::new("u", self.u).unwrap(),
             Field::new("i", self.i).unwrap(),
@@ -38,10 +37,14 @@ async fn main() {
     )
     .unwrap();
 
-    let field = Field::new("filedKey", "fieldValue").unwrap();
-    let point = Point::builder("test").add_field(field).build().unwrap();
+    let meas = Meas {
+        u: 44,
+        i: 45i64,
+        fi: 47f64,
+        location: "T".to_owned(),
+    };
 
     let query = WriteQuery::with_org("bucket", "org");
-    let result = client.write(point, &query).await;
+    let result = client.write(meas, &query).await;
     println!("{:?}", result);
 }
