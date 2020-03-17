@@ -25,7 +25,8 @@ async fn main() {
 
     let worker = five.chunks(4).for_each_concurrent(4, |point_vec| {
         client
-            .write(point_vec, &query)
+            .clone()
+            .write(point_vec, query.clone())
             .map_err(|err| eprintln!("{}", err))
             .map(drop)
     });

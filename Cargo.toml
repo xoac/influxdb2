@@ -27,26 +27,6 @@ readme = "README.md"
 # Rust API Guidelines at https://rust-lang.github.io/api-guidelines/about.html
 
 [badges]
-# Codecov: `repository` is required. `branch` is optional; default is `master`
-# `service` is optional; valid values are `github` (default), `bitbucket`, and
-# `gitlab`.
-# codecov = { repository = "...", branch = "master", service = "github" }
-
-# Maintenance: `status` is required. Available options are:
-# - `actively-developed`: New features are being added and bugs are being fixed.
-# - `passively-maintained`: There are no plans for new features, but the maintainer intends to
-#   respond to issues that get filed.
-# - `as-is`: The crate is feature complete, the maintainer does not intend to continue working on
-#   it or providing support, but it works for the purposes it was designed for.
-# - `experimental`: The author wants to share it with the community but is not intending to meet
-#   anyone's particular use case.
-# - `looking-for-maintainer`: The current maintainer would like to transfer the crate to someone
-#   else.
-# - `deprecated`: The maintainer does not recommend using this crate (the description of the crate
-#   can describe why, there could be a better solution available or there could be problems with
-#   the crate that the author does not want to fix).
-# - `none`: Displays no badge on crates.io, since the maintainer has not chosen to specify
-#   their intentions, potential crate users will need to investigate on their own.
  maintenance = { status = "actively-developed" }
 
 [dependencies]
@@ -60,8 +40,11 @@ serde_json = "1"
 derive_more = "0.99"
 ordered-float = "1"
 
+
 [dev-dependencies]
 tokio = { version = "0.2", features = ["full"] }
-futures = { version = "0.3" }
+futures = { version = "0.3", features = ["default", "compat"] }
+futures_01 = { version = "0.1.25", package = "futures"}
+tokio_01 = { version = "0.1", package = "tokio" }
 
 # This Cargo.toml was generated from template: https://github.com/xoac/crates-io-lib-template

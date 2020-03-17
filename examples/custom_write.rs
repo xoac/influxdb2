@@ -45,6 +45,6 @@ async fn main() {
     };
 
     let query = WriteQuery::with_org("bucket", "org");
-    let result = client.write(meas, &query).await;
+    let result = client.write(meas, query).await;
     println!("{:?}", result);
 }

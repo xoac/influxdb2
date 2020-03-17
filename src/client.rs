@@ -2,10 +2,16 @@ use http::{method::Method, uri::Uri};
 use influxdb_line_protocol::Batch;
 use reqwest as rw;
 use reqwest::Client as ReqwestClient;
+use std::sync::Arc;
 
 /// Influx DB v2 Client
 #[derive(Debug, Clone)]
 pub struct Client {
+    inner: Arc<InnerClient>,
+}
+
+#[derive(Debug)]
+struct InnerClient {
     hyper: ReqwestClient,
     token: String,
     org: String,
@@ -22,18 +28,21 @@ impl Client {
         // check url is correct
         let _uri: Uri = url.as_ref().parse()?;
 
-        Ok(Self {
+        let inner = Arc::new(InnerClient {
             hyper: Default::default(),
             token: token.as_ref().into(),
             org: org.as_ref().into(),
             base_url: format!("{}/api/v2/", url.as_ref()),
-        })
+        });
+
+        Ok(Self { inner })
     }
 
     fn req_builder(&self, method: Method, url: impl AsRef<str>) -> rw::RequestBuilder {
-        self.hyper
+        self.inner
+            .hyper
             .request(method, url.as_ref())
-            .header("Authorization", format!("Token {}", self.token))
+            .header("Authorization", format!("Token {}", self.inner.token))
     }
 }
 
@@ -46,7 +55,7 @@ impl Client {
     ///
     /// [source doc](https://v2.docs.influxdata.com/v2.0/api/#operation/GetBuckets)
     pub async fn bucket_list_all(&self) -> Result<Buckets, rw::Error> {
-        let uri = format!("{}{}", self.base_url, "buckets");
+        let uri = format!("{}{}", self.inner.base_url, "buckets");
         println!("Sedning req {}", uri);
         let result = self.req_builder(Method::GET, uri).send().await?;
         if result.status().is_success() {
@@ -60,18 +69,17 @@ impl Client {
 use crate::write::WriteQuery;
 
 impl Client {
-    pub async fn write(
-        &self,
-        batch: impl Into<Batch>,
-        query: &WriteQuery,
-    ) -> Result<(), rw::Error> {
+    pub async fn write<B>(self, batch: B, query: WriteQuery) -> Result<(), rw::Error>
+    where
+        B: Into<Batch> + Send,
+    {
         let batch = batch.into();
         let str_lines = batch.to_line_protocol();
-        let uri = format!("{}{}", self.base_url, "write");
+        let uri = format!("{}{}", self.inner.base_url, "write");
 
         let result = self
             .req_builder(Method::POST, uri)
-            .query(query)
+            .query(&query)
             .body(str_lines)
             .send()
             .await?;

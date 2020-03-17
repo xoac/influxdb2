@@ -16,7 +16,7 @@ async fn single_point_write() {
     let point = Point::builder("test").add_field(field).build().unwrap();
 
     let query = WriteQuery::with_org(&bucket, &org);
-    let result = client.write(point, &query).await.unwrap();
+    let result = client.write(point, query).await.unwrap();
     println!("{:?}", result);
 }
 
@@ -38,7 +38,7 @@ async fn write_stream_of_points() {
 
     let worker = five
         .chunks(4)
-        .then(|point_vec| client.write(point_vec, &query))
+        .then(|point_vec| client.clone().write(point_vec, query.clone()))
         .try_for_each(|_x| futures::future::ready(Ok(())));
 
     let result = worker.await.unwrap();
