@@ -1,3 +1,4 @@
+use crate::error;
 use http::{method::Method, uri::Uri};
 use influxdb_line_protocol::Batch;
 use reqwest as rw;
@@ -21,7 +22,7 @@ struct InnerClient {
 
 impl Client {
     /// Create new Influx DB Client
-    pub fn new<T>(url: T, org: T, token: T) -> Result<Self, http::uri::InvalidUri>
+    pub fn new<T>(url: T, org: T, token: T) -> Result<Self, error::InvalidUri>
     where
         T: AsRef<str>,
     {

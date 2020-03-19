@@ -1,11 +1,13 @@
 set -e
 set -x
 
+IMAGE=quay.io/influxdb/influxdb:2.0.0-beta
 INFLUX_ORG=primary_org
 INFLUX_BUCKET=primary_bucket
 INFLUX_USER=user
 
-CONTAINER=$(docker run --rm -d -p 9999:9999 quay.io/influxdb/influxdb:2.0.0-beta)
+docker pull $IMAGE
+CONTAINER=$(docker run --rm -d -p 9999:9999 $IMAGE)
 f() {
   echo "Stopping created container.."
   docker stop $CONTAINER

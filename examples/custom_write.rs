@@ -1,6 +1,6 @@
 use influxdb2::write::WriteQuery;
 use influxdb2::Client;
-use influxdb_line_protocol::{error::Error, Field, Point};
+use influxdb_line_protocol::{Field, Point};
 use std::convert::TryFrom;
 
 struct Meas {
@@ -20,8 +20,8 @@ impl Into<Point> for Meas {
         ];
 
         Point::builder("meas")
-            .try_add_tag::<_, Error>(("location", self.location))
             .unwrap()
+            .try_add_tag(("location", self.location))
             .add_fields(fields)
             .build()
             .unwrap()

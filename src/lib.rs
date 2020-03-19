@@ -4,7 +4,7 @@
 
 pub mod bucket;
 mod client;
-mod error;
+pub mod error;
 mod id;
 mod precision;
 mod timestamp;

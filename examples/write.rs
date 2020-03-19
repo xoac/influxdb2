@@ -13,7 +13,11 @@ async fn main() {
     let client = Client::new(host, org.clone(), token).unwrap();
 
     let field = Field::new("filedKey", "fieldValue").unwrap();
-    let point = Point::builder("test").add_field(field).build().unwrap();
+    let point = Point::builder("test")
+        .unwrap()
+        .add_field(field)
+        .build()
+        .unwrap();
 
     let query = WriteQuery::with_org(&bucket, &org);
     let result = client.write(point, query).await;

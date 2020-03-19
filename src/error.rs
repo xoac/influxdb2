@@ -4,6 +4,8 @@ use thiserror::Error;
 // TODO
 // Now we will be returned ApiError but it would be better probably to have strong typed errors.
 
+pub use http::uri::InvalidUri;
+
 /// error code in unsucesfull response json
 #[derive(Debug, Deserialize, Clone, Copy)]
 #[serde(rename_all = "lowercase")]

@@ -19,13 +19,6 @@ pub struct Timestamp {
     inner: NaiveDateTime,
 }
 
-impl Timestamp {
-    #[inline]
-    pub fn timestamp_nanos(&self) -> i64 {
-        self.inner.timestamp_nanos()
-    }
-}
-
 impl FromStr for Timestamp {
     type Err = ParseError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
