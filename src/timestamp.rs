@@ -10,7 +10,7 @@ use serde::{
 };
 use std::str::FromStr;
 
-const TIMESTAMP_FORMAT: &'static [Item<'static>] = &[Item::Fixed(Fixed::RFC3339)];
+const TIMESTAMP_FORMAT: &[Item<'static>] = &[Item::Fixed(Fixed::RFC3339)];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Timestamp {

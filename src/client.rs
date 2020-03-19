@@ -1,8 +1,9 @@
-use crate::error;
+use crate::error::{ApiError, Error, InvalidUri};
 use http::{method::Method, uri::Uri};
 use influxdb_line_protocol::Batch;
 use reqwest as rw;
 use reqwest::Client as ReqwestClient;
+use serde::de::DeserializeOwned;
 use std::sync::Arc;
 
 /// Influx DB v2 Client
@@ -20,9 +21,21 @@ struct InnerClient {
     base_url: String,
 }
 
+async fn json_or_error<T>(result: rw::Response) -> Result<T, Error>
+where
+    T: DeserializeOwned,
+{
+    if result.status().is_success() {
+        result.json::<T>().await.map_err(Error::from)
+    } else {
+        let api_err = result.json::<ApiError>().await?;
+        Err(Error::from(api_err))
+    }
+}
+
 impl Client {
     /// Create new Influx DB Client
-    pub fn new<T>(url: T, org: T, token: T) -> Result<Self, error::InvalidUri>
+    pub fn new<T>(url: T, org: T, token: T) -> Result<Self, InvalidUri>
     where
         T: AsRef<str>,
     {
@@ -55,22 +68,18 @@ impl Client {
     ///List all buckets.
     ///
     /// [source doc](https://v2.docs.influxdata.com/v2.0/api/#operation/GetBuckets)
-    pub async fn bucket_list_all(&self) -> Result<Buckets, rw::Error> {
+    pub async fn bucket_list_all(&self) -> Result<Buckets, Error> {
         let uri = format!("{}{}", self.inner.base_url, "buckets");
         println!("Sedning req {}", uri);
         let result = self.req_builder(Method::GET, uri).send().await?;
-        if result.status().is_success() {
-            result.json::<Buckets>().await
-        } else {
-            todo!()
-        }
+        json_or_error::<Buckets>(result).await
     }
 }
 
 use crate::write::WriteQuery;
 
 impl Client {
-    pub async fn write<B>(self, batch: B, query: WriteQuery) -> Result<(), rw::Error>
+    pub async fn write<B>(self, batch: B, query: WriteQuery) -> Result<(), Error>
     where
         B: Into<Batch> + Send,
     {
@@ -87,7 +96,8 @@ impl Client {
         if result.status().is_success() {
             Ok(())
         } else {
-            todo!();
+            let api_err = result.json::<ApiError>().await?;
+            Err(Error::from(api_err))
         }
     }
 }

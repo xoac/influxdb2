@@ -1,3 +1,4 @@
+use reqwest as rw;
 use serde::Deserialize;
 use thiserror::Error;
 
@@ -7,9 +8,9 @@ use thiserror::Error;
 pub use http::uri::InvalidUri;
 
 /// error code in unsucesfull response json
-#[derive(Debug, Deserialize, Clone, Copy)]
+#[derive(Debug, Deserialize, Clone, Copy, PartialEq)]
 #[serde(rename_all = "lowercase")]
-enum ErrorCode {
+pub enum ErrorCode {
     #[serde(rename = "internal error")]
     InternalError,
     #[serde(rename = "not found")]
@@ -35,4 +36,18 @@ enum ErrorCode {
 pub struct ApiError {
     code: ErrorCode,
     message: String,
+}
+
+impl ApiError {
+    pub fn code(&self) -> ErrorCode {
+        self.code
+    }
+}
+
+#[derive(Debug, Error)]
+pub enum Error {
+    #[error("{}", .0)]
+    Client(#[from] rw::Error),
+    #[error("{}", .0)]
+    Api(#[from] ApiError),
 }
