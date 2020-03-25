@@ -47,5 +47,6 @@ tokio = { version = "0.2", features = ["full"] }
 futures = { version = "0.3", features = ["default", "compat"] }
 futures_01 = { version = "0.1.25", package = "futures"}
 tokio_01 = { version = "0.1", package = "tokio" }
+pretty_env_logger = "0.4"
 
 # This Cargo.toml was generated from template: https://github.com/xoac/crates-io-lib-template

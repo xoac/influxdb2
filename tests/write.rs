@@ -5,9 +5,11 @@ use influxdb2::{
     Client, Precision,
 };
 use influxdb_line_protocol::*;
+use std::convert::TryFrom;
 use std::env;
 
 fn read_4_varibales() -> (String, String, String, String) {
+    let _ = pretty_env_logger::try_init();
     let host = env::var("INFLUX_HOST").unwrap_or("http://localhost:9999".into());
     let org = env::var("INFLUX_ORG").expect("INFLUX_ORG env variable must be set");
     let token = env::var("INFLUX_TOKEN").expect("INFLUX_TOKEN env variable must be set");
@@ -59,10 +61,14 @@ async fn write_stream_of_points() {
     let (host, org, token, bucket) = read_4_varibales();
     let client = Client::new(host, org.clone(), token).unwrap();
 
-    let field = Field::new("filedKey", "fieldValue").unwrap();
+    let field1 = Field::new("filedKey", "fieldValue").unwrap();
+    let field2 = Field::new("f2", r#""test""#).unwrap();
+    let tag = Tag::try_from(("tag=", "tagValue")).unwrap();
     let point = Point::builder("test")
         .unwrap()
-        .add_field(field)
+        .add_tag(tag)
+        .add_field(field1)
+        .add_field(field2)
         .build()
         .unwrap();
 
