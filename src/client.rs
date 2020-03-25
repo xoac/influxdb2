@@ -1,6 +1,7 @@
 use crate::error::{ApiError, Error, InvalidUri};
 use http::{method::Method, uri::Uri};
 use influxdb_line_protocol::Batch;
+use log::trace;
 use reqwest as rw;
 use reqwest::Client as ReqwestClient;
 use serde::de::DeserializeOwned;
@@ -60,10 +61,10 @@ impl Client {
     }
 }
 
+use crate::bucket::Buckets;
 /// Implement Buckets
 ///
 /// All method from [bucket doc api](https://v2.docs.influxdata.com/v2.0/api/#tag/Buckets)
-use crate::bucket::Buckets;
 impl Client {
     ///List all buckets.
     ///
@@ -77,14 +78,18 @@ impl Client {
 }
 
 use crate::write::WriteQuery;
-
+/// Implement write
+///
+/// All method form [write doc api](https://v2.docs.influxdata.com/v2.0/api/#tag/Write)
 impl Client {
+    //TODO in v0.1.0 change `self` and `query` to reference. Stop support compat write.
     pub async fn write<B>(self, batch: B, query: WriteQuery) -> Result<(), Error>
     where
         B: Into<Batch> + Send,
     {
         let batch = batch.into();
         let str_lines = batch.to_line_protocol();
+        trace!("Write body in protocol-line:\n {}", str_lines);
         let uri = format!("{}{}", self.inner.base_url, "write");
 
         let result = self

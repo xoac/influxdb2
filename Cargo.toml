@@ -39,6 +39,7 @@ chrono = "0.4"
 serde_json = "1"
 derive_more = "0.99"
 ordered-float = "1"
+log = "0.4"
 
 
 [dev-dependencies]
