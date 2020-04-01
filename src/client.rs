@@ -83,14 +83,17 @@ use crate::write::WriteQuery;
 /// All method form [write doc api](https://v2.docs.influxdata.com/v2.0/api/#tag/Write)
 impl Client {
     //TODO in v0.1.0 change `self` and `query` to reference. Stop support compat write.
-    pub async fn write<B>(self, batch: B, query: WriteQuery) -> Result<(), Error>
+    pub async fn write<B>(self, batch: B, mut query: WriteQuery) -> Result<(), Error>
     where
         B: Into<Batch> + Send,
     {
         let batch = batch.into();
-        let str_lines = batch.to_line_protocol();
-        trace!("Write body in protocol-line:\n {}", str_lines);
+        let precision = batch.precision();
+        let str_lines = batch.to_line_protocol_lossy(precision);
+        trace!("Write body in protocol-line:\n{}", str_lines);
         let uri = format!("{}{}", self.inner.base_url, "write");
+
+        query.set_precision(precision);
 
         let result = self
             .req_builder(Method::POST, uri)

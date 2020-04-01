@@ -3,7 +3,7 @@ use futures::stream::StreamExt;
 use futures::FutureExt;
 use futures::TryFutureExt;
 use influxdb2::write::WriteQuery;
-use influxdb2::{Client, Precision};
+use influxdb2::Client;
 use influxdb_line_protocol::{Field, Point};
 use std::env;
 
@@ -23,7 +23,7 @@ async fn main() {
         .build()
         .unwrap();
 
-    let query = WriteQuery::with_org(bucket, org).precision(Precision::Milli);
+    let query = WriteQuery::with_org(bucket, org);
 
     let five = futures::stream::repeat(point).take(5);
 
