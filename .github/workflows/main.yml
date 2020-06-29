@@ -27,7 +27,7 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - run: ./run_all_test.sh
+      - run: ./run_all_tests.sh
 
   fmt:
     name: Rustfmt

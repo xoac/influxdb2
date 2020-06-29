@@ -1,54 +1,40 @@
-# cargo-io-lib-template
+[![crates.io](https://img.shields.io/crates/v/influxdb2.svg)](https://crates.io/crates/influxdb2)
+[![Documentation](https://docs.rs/influxdb2/badge.svg)](https://docs.rs/influxdb2/)
+[![Build Status](https://cloud.drone.io/api/badges/xoac/influxdb2/status.svg)](https://cloud.drone.io/xoac/influxdb2)
+![Maintenance](https://img.shields.io/badge/maintenance-activly--developed-brightgreen.svg)
 
-This is tweaked `cargo init --lib` for FOSS.
+# influxdb2
 
-## How to use:
-You need to do this 4 simple steps:
-### 1. Use `cargo generate` to clone this template
-```
-cargo generate --git https://github.com/xoac/crates-io-lib-template.git --name my-project
-cd my-project
-```
-[Learn more about `cargo generate` here.][cargo-generate]
+Unofficial client for InfluxDB v2
 
-### 2. Update CHANGELOG.md and README.tpl Cargo.toml
-You need to replace `GITHUB_ORG_PATH` with your organization path. For example for this project the `GITHUB_ORG_PATH` would be `https://github.com/xoac/` (remember about last `/`).
+This crate is under development.
 
-You can do this with `sed` or with your IDE.
-```
-sed -i 's/GITHUB_ORG_PATH/https:\/\/github\.com\/xoac\//g' README.tpl CHANGELOG.md Cargo.toml
-```
+At this moment this allow you:
+- write [`Batch`] from crate influxdb-line-protocol
 
-This is limitation because of this [issue](https://github.com/ashleygwilliams/cargo-generate/issues/17).
+See examples folder for quick start.
 
-### 3. Update Cargo.toml
-Edit `Cargo.toml` there are some basic information you should provide.
+[`Batch`]:influxdb_line_protocol::Batch
 
-[Learn more about Cargo.toml here.](https://doc.rust-lang.org/cargo/reference/manifest.html)
+## License
 
-This is limitation because of this [issue](https://github.com/ashleygwilliams/cargo-generate/issues/17).
+Licensed under either of
 
+ * Apache License, Version 2.0
+   ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+ * MIT license
+   ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
 
-### 4. Replace this README.md
-Create description of you library at top of `src.lib.rs` and generate `README.md` with:
-```
-cargo readme > README.md
-```
-[Lern more about `cargo readme` here.][cargo-readme]
+at your option.
 
+## Contribution
 
-## What this template provide:
-- Follow [Rust API Guidelines]
-  * license MIT OR APACHE v2.0
-- Contains default `README.tpl` that help you generate README.md with [cargo-readme]
-- Contains `CHANGELOG.md` that follow [keepchangelog]
-- Quick start [workflow](https://github.com/actions-rs/meta/blob/master/recipes/quickstart.md) on stable rust:
-  * `cargo check`
-  * `cargo test`
-  * `cargo fmt`
-  * `cargo clippy -- -D warnings`
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
+dual licensed as above, without any additional terms or conditions.
 
-[Rust API Guidelines]:https://rust-lang.github.io/api-guidelines/about.html
-[cargo-readme]:https://github.com/livioribeiro/cargo-readme
-[cargo-generate]:https://github.com/ashleygwilliams/cargo-generate
-[keepchangelog]:https://keepachangelog.com
+This project try follow rules:
+* [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+* [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+_This README was generated with [cargo-readme](https://github.com/livioribeiro/cargo-readme) from [template](https://github.com/xoac/crates-io-lib-template)_
