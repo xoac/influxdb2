@@ -1,6 +1,6 @@
 [![crates.io](https://img.shields.io/crates/v/influxdb2.svg)](https://crates.io/crates/influxdb2)
 [![Documentation](https://docs.rs/influxdb2/badge.svg)](https://docs.rs/influxdb2/)
-[![Build Status](https://cloud.drone.io/api/badges/xoac/influxdb2/status.svg)](https://cloud.drone.io/xoac/influxdb2)
+![Continuous integration](https://github.com/xoac/influxdb2/workflows/Continuous%20integration/badge.svg)
 {{badges}}
 
 # {{crate}}
