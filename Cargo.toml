@@ -42,7 +42,7 @@ ordered-float = "1"
 log = "0.4"
 
 [features]
-default = ["reqwest/default-tls"]
+default = ["reqwest/default-tls", "json"]
 rustls = ["reqwest/rustls-tls"]
 json = ["reqwest/json"]
 
