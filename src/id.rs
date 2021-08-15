@@ -30,7 +30,7 @@ impl FromStr for Id {
         if s.len() != ID_LEN {
             Err(IdErr::Parse)
         } else {
-            let v = u64::from_str_radix(&s, 16).map_err(|_| IdErr::Parse)?;
+            let v = u64::from_str_radix(s, 16).map_err(|_| IdErr::Parse)?;
             if v == 0 {
                 Err(IdErr::ZeroId)
             } else {
